@@ -16,8 +16,8 @@ export class Simulation {
         // Paramètres de la simulation
         this.params = {
             foodSpawnRate: 0.02, // Probabilité d'apparition de nourriture à chaque frame
-            maxFood: 30,         // Nombre maximum de nourriture
-            foodEneregy: 80
+            maxFood: 30, // Nombre maximum de nourriture
+            foodEneregy: 80,
         };
 
         // Effets visuels
@@ -38,7 +38,7 @@ export class Simulation {
      */
     update() {
         // Mettre à jour chaque créature
-        for (const creature  of this.creatures) {
+        for (const creature of this.creatures) {
             creature.eatFood(this.foods);
 
             // Appliquer les comportements de mouvement
@@ -91,13 +91,14 @@ export class Simulation {
      */
     spawnFood() {
         // Ajouter de la nourriture avec une certaine probabilité
-        if (this.foods.length < this.params.maxFood &&
-            this.p.random() < this.params.foodSpawnRate) {
-
+        if (
+            this.foods.length < this.params.maxFood &&
+            this.p.random() < this.params.foodSpawnRate
+        ) {
             // Créer une nouvelle nourriture à une position aléatoire
             const food = {
-                x: this.p.random(this.p.width - (MARGIN_SIZE * 2)),
-                y: this.p.random(this.p.height - (MARGIN_SIZE *2)),
+                x: this.p.random(MARGIN_SIZE, this.p.width - MARGIN_SIZE),
+                y: this.p.random(MARGIN_SIZE, this.p.height - MARGIN_SIZE),
                 energy: this.params.foodEneregy,
             };
 
@@ -120,8 +121,8 @@ export class Simulation {
                     this.p.random(100, 255),
                     this.p.random(100, 255),
                     this.p.random(100, 255),
-                    this.p.random(30, 80)
-                )
+                    this.p.random(30, 80),
+                ),
             });
         }
     }
@@ -152,7 +153,12 @@ export class Simulation {
         this.p.noStroke();
         for (const particle of this.bgParticles) {
             this.p.fill(particle.color);
-            this.p.ellipse(particle.x, particle.y, particle.size, particle.size);
+            this.p.ellipse(
+                particle.x,
+                particle.y,
+                particle.size,
+                particle.size,
+            );
         }
     }
 }

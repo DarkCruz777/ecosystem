@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import EcosystemSimulation from './components/EcosystemSimulation';
-import Controls from './components/Controls';
-import StatusPanel from './components/StatusPanel';
+import SideMenu from './components/SideMenu.jsx';
 
-const initialCreatureCount = 50
+const initialSimulationParams = {
+    speed: 1.0,
+    foodRate: 5,
+    mutationRate: 0.1,
+    initialCreatureCount: 50,
+};
+
 function App() {
     const [isRunning, setIsRunning] = useState(true);
-    const [creatureCount, setCreatureCount] = useState(initialCreatureCount);
+    const [creatureCount, setCreatureCount] = useState(
+        initialSimulationParams.initialCreatureCount,
+    );
     const [simulationKey, setSimulationKey] = useState(0); // Pour forcer une réinitialisation
+    const [simulationParams, setSimulationParams] = useState(
+        initialSimulationParams,
+    );
 
     const handleStart = () => {
         setIsRunning(true);
@@ -20,33 +30,40 @@ function App() {
     const handleReset = () => {
         setIsRunning(false);
         // Force une nouvelle instance du composant en changeant sa key
-        setSimulationKey(prevKey => prevKey + 1);
-        setCreatureCount(initialCreatureCount);
+        setSimulationKey((prevKey) => prevKey + 1);
+        setCreatureCount(simulationParams.initialCreatureCount);
     };
 
     const updateCreatureCount = (count) => {
         setCreatureCount(count);
     };
 
+    const handleParamChange = (paramName, value) => {
+        setSimulationParams((prev) => ({
+            ...prev,
+            [paramName]: value,
+        }));
+    };
+
     return (
-        <div className="relative w-full h-screen">
-            <Controls
+        <div className="relative w-full h-screen bg-dark-blue">
+            <EcosystemSimulation
+                key={simulationKey}
+                isRunning={isRunning}
+                creatureCount={creatureCount}
+                simulationSpeed={simulationParams.speed}
+                foodRate={simulationParams.foodRate}
+                mutationRate={simulationParams.mutationRate}
+            />
+
+            <SideMenu
                 isRunning={isRunning}
                 onStart={handleStart}
                 onPause={handlePause}
                 onReset={handleReset}
-            />
-
-            <EcosystemSimulation
-                key={simulationKey}
-                isRunning={isRunning}
-                initialCreatureCount={creatureCount}
-                onCreatureCountChange={updateCreatureCount}
-            />
-
-            <StatusPanel
                 creatureCount={creatureCount}
-                isRunning={isRunning}
+                simulationParams={simulationParams}
+                onParamChange={handleParamChange}
             />
         </div>
     );
