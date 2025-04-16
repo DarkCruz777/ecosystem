@@ -1,0 +1,35 @@
+default:
+  image: node:22-alpine
+
+stages:
+  - ci
+  - cd
+
+variables:
+  # enable docker buildkit. Used with `BUILDKIT_INLINE_CACHE=1` below
+  DOCKER_BUILDKIT: 1
+
+ci:
+  stage: ci
+  before_script:
+    - corepack enable
+    - pnpm config set store-dir .pnpm-store
+  script:
+    - pnpm install
+    - pnpm run build
+  tags:
+    - ci
+
+build_prod:
+  stage: cd
+  script:
+    - docker compose down
+    - docker compose up -d --build
+  environment:
+    name: easy-synapse-prod
+    url: http://easysynapse.be
+  when: manual
+  tags:
+    - cd
+  only:
+    - tags
