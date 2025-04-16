@@ -26,8 +26,8 @@ build_prod:
     - docker compose down
     - docker compose up -d --build
   environment:
-    name: easy-synapse-prod
-    url: http://easysynapse.be
+    name: ecosystem-prod
+    url: http://ecosystem.easysynapse.be
   when: manual
   tags:
     - cd
