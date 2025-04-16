@@ -5,5 +5,5 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - "127.0.0.1:5173:5173"
+      - "127.0.0.1:5174:5173"
 
