@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import p5 from 'p5';
 import { Simulation } from '../simulation/simulation';
 import { Creature } from '../simulation/creature';
@@ -42,7 +42,7 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
 
             p.draw = () => {
                 // Fond plus sombre avec effet de traînée
-                p.background(15, 23, 42, 100);
+                p.background(15, 23, 42);
 
                 if (isRunning) {
                     // Mettre à jour l'état de la simulation si elle est en cours
@@ -82,7 +82,7 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
         // Pas besoin d'action spécifique ici car le status est vérifié dans la boucle draw
     }, [isRunning]);
 
-    return <div ref={containerRef} className="absolute inset-0 z-1" />;
+    return <div ref={containerRef} className="w-full h-full relative" />;
 };
 
 export default EcosystemSimulation;

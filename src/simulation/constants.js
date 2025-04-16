@@ -1,0 +1,1 @@
+export const MARGIN_SIZE = 20
