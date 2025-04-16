@@ -3,9 +3,10 @@ import EcosystemSimulation from './components/EcosystemSimulation';
 import Controls from './components/Controls';
 import StatusPanel from './components/StatusPanel';
 
+const initialCreatureCount = 50
 function App() {
     const [isRunning, setIsRunning] = useState(true);
-    const [creatureCount, setCreatureCount] = useState(50);
+    const [creatureCount, setCreatureCount] = useState(initialCreatureCount);
     const [simulationKey, setSimulationKey] = useState(0); // Pour forcer une réinitialisation
 
     const handleStart = () => {
@@ -20,7 +21,7 @@ function App() {
         setIsRunning(false);
         // Force une nouvelle instance du composant en changeant sa key
         setSimulationKey(prevKey => prevKey + 1);
-        setCreatureCount(50);
+        setCreatureCount(initialCreatureCount);
     };
 
     const updateCreatureCount = (count) => {
@@ -39,7 +40,7 @@ function App() {
             <EcosystemSimulation
                 key={simulationKey}
                 isRunning={isRunning}
-                initialCreatureCount={50}
+                initialCreatureCount={creatureCount}
                 onCreatureCountChange={updateCreatureCount}
             />
 

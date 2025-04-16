@@ -1,3 +1,5 @@
+import { MARGIN_SIZE } from './constants.js';
+
 /**
  * Classe Creature - Représente une entité vivante dans la simulation
  */
@@ -35,6 +37,14 @@ export class Creature {
         this.alignmentWeight = 1.0;
         this.cohesionWeight = 1.0;
         this.wanderWeight = 0.5;
+
+        this.energy = p.random(80, 120);
+        this.metabolismRate = 0.02;
+        this.age = 0;
+        this.lifespan = p.random(800, 1200); // Durée de vie en frames
+        this.reproductionThreshold = 150;
+        this.reproductionCost = 0.5; // % d'énergie perdue lors de la reproduction
+        this.hungryThreshold = 50;
     }
 
     /**
@@ -53,6 +63,12 @@ export class Creature {
 
         // Gérer les bords
         this.handleBoundaries();
+
+        //this.age++;
+        this.energy -= this.metabolismRate;
+
+        // Vérifier si la créature est morte
+        //return (this.energy <= 0 || this.age >= this.lifespan)
     }
 
     /**
@@ -93,22 +109,82 @@ export class Creature {
         p.pop();
     }
 
+    eatFood(foods) {
+        const eatRadius = this.size;
+        for (let i = foods.length - 1; i >= 0; i--) {
+            const food = foods[i];
+            const d = this.p.dist(this.position.x, this.position.y, food.x, food.y);
+            if (d < eatRadius) {
+                this.energy += food.energy;
+                foods.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    reproduce() {
+        // Créer une nouvelle créature avec des caractéristiques similaires
+        const child = new Creature(
+            this.p,
+            this.position.x + this.p.random(-20, 20),
+            this.position.y + this.p.random(-20, 20),
+            this.size * this.p.random(0.9, 1.1), // Petite variation de taille
+            this.maxSpeed * this.p.random(0.9, 1.1), // Petite variation de vitesse
+            this.p.color(
+                this.p.red(this.color) + this.p.random(-20, 20),
+                this.p.green(this.color) + this.p.random(-20, 20),
+                this.p.blue(this.color) + this.p.random(-20, 20)
+            )
+        );
+
+        // Coût énergétique pour la reproduction
+        this.energy *= this.reproductionCost;
+
+        return child;
+    }
+
     /**
      * Applique les comportements de groupe (boids)
      * @param {Array} creatures - Tableau des créatures de la simulation
+     * @param {Array} foods - Tableau des nourritures de la simulation
      */
-    applyBehaviors(creatures) {
+    applyBehaviors(creatures, foods) {
         // Calculer les forces de comportement
         const separation = this.separate(creatures).mult(this.separationWeight);
         const alignment = this.align(creatures).mult(this.alignmentWeight);
         const cohesion = this.cohere(creatures).mult(this.cohesionWeight);
         const wander = this.wander().mult(this.wanderWeight);
 
+        let foodSeeking = this.p.createVector();
+        if (this.energy < this.hungryThreshold && foods.length > 0) {
+            const nearestFood = this.findNearestFood(foods);
+            if (nearestFood) {
+                foodSeeking = this.seek(nearestFood).mult(2.0); // Poids plus important
+            }
+        }
+
         // Appliquer les forces
         this.applyForce(separation);
         this.applyForce(alignment);
         this.applyForce(cohesion);
         this.applyForce(wander);
+        this.applyForce(foodSeeking);
+    }
+
+    findNearestFood(foods) {
+        let closest = null;
+        let record = Infinity;
+
+        for (const food of foods) {
+            const d = this.p.dist(this.position.x, this.position.y, food.x, food.y);
+            if (d < record) {
+                record = d;
+                closest = food;
+            }
+        }
+
+        return closest;
     }
 
     /**
@@ -304,21 +380,19 @@ export class Creature {
      */
     handleBoundaries() {
         // Rebondir sur les bords avec des marges pour éviter le collage
-        const margin = 20;
-
-        if (this.position.x < margin) {
-            this.position.x = margin;
+        if (this.position.x < MARGIN_SIZE) {
+            this.position.x = MARGIN_SIZE;
             this.velocity.x *= -1;
-        } else if (this.position.x > this.p.width - margin) {
-            this.position.x = this.p.width - margin;
+        } else if (this.position.x > this.p.width - MARGIN_SIZE ) {
+            this.position.x = this.p.width - MARGIN_SIZE;
             this.velocity.x *= -1;
         }
 
-        if (this.position.y < margin) {
-            this.position.y = margin;
+        if (this.position.y < MARGIN_SIZE) {
+            this.position.y = MARGIN_SIZE;
             this.velocity.y *= -1;
-        } else if (this.position.y > this.p.height - margin) {
-            this.position.y = this.p.height - margin;
+        } else if (this.position.y > this.p.height - MARGIN_SIZE ) {
+            this.position.y = this.p.height - MARGIN_SIZE;
             this.velocity.y *= -1;
         }
     }

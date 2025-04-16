@@ -1,3 +1,5 @@
+import { MARGIN_SIZE } from './constants.js';
+
 /**
  * Classe Simulation - Gère l'ensemble de l'écosystème
  */
@@ -15,6 +17,7 @@ export class Simulation {
         this.params = {
             foodSpawnRate: 0.02, // Probabilité d'apparition de nourriture à chaque frame
             maxFood: 30,         // Nombre maximum de nourriture
+            foodEneregy: 80
         };
 
         // Effets visuels
@@ -35,12 +38,14 @@ export class Simulation {
      */
     update() {
         // Mettre à jour chaque créature
-        for (let i = 0; i < this.creatures.length; i++) {
+        for (const creature  of this.creatures) {
+            creature.eatFood(this.foods);
+
             // Appliquer les comportements de mouvement
-            this.creatures[i].applyBehaviors(this.creatures);
+            creature.applyBehaviors(this.creatures, this.foods);
 
             // Mettre à jour la position
-            this.creatures[i].update();
+            creature.update();
         }
 
         // Ajouter aléatoirement de la nourriture
@@ -91,9 +96,9 @@ export class Simulation {
 
             // Créer une nouvelle nourriture à une position aléatoire
             const food = {
-                x: this.p.random(this.p.width),
-                y: this.p.random(this.p.height),
-                energy: 10
+                x: this.p.random(this.p.width - (MARGIN_SIZE * 2)),
+                y: this.p.random(this.p.height - (MARGIN_SIZE *2)),
+                energy: this.params.foodEneregy,
             };
 
             this.foods.push(food);
