@@ -1,6 +1,6 @@
 {
-  "name": "simulateur-ecosysteme",
-  "version": "1.0.0",
+  "name": "ecosysteme",
+  "version": "1.0.1",
   "description": "Simulateur d'écosystème interactif",
   "type": "module",
   "scripts": {
@@ -19,6 +19,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "lucide-react": "^0.488.0",
     "p5": "^1.11.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

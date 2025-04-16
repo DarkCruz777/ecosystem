@@ -1,9 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import p5 from 'p5';
 import { Simulation } from '../simulation/simulation';
 import { Creature } from '../simulation/creature';
 
-const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountChange }) => {
+const EcosystemSimulation = ({
+    isRunning,
+    creatureCount,
+    foodRate,
+    simulationSpeed,
+}) => {
     const containerRef = useRef(null);
     const simulationRef = useRef(null);
     const p5InstanceRef = useRef(null);
@@ -15,7 +20,10 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
 
             p.setup = () => {
                 // Créer un canvas plein écran
-                const canvas = p.createCanvas(window.innerWidth, window.innerHeight);
+                const canvas = p.createCanvas(
+                    window.innerWidth,
+                    window.innerHeight,
+                );
                 canvas.parent(containerRef.current);
 
                 // Initialiser la simulation
@@ -23,7 +31,7 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
                 simulationRef.current = simulation;
 
                 // Créer les créatures initiales
-                for (let i = 0; i < initialCreatureCount; i++) {
+                for (let i = 0; i < creatureCount; i++) {
                     const x = p.random(p.width);
                     const y = p.random(p.height);
                     const size = p.random(8, 15);
@@ -32,10 +40,17 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
                         p.random(100, 255),
                         p.random(100, 255),
                         p.random(100, 255),
-                        200
+                        200,
                     );
 
-                    const creature = new Creature(p, x, y, size, maxSpeed, color);
+                    const creature = new Creature(
+                        p,
+                        x,
+                        y,
+                        size,
+                        maxSpeed,
+                        color,
+                    );
                     simulation.addCreature(creature);
                 }
             };
@@ -51,11 +66,6 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
 
                 // Afficher toujours la simulation, même en pause
                 simulation.display();
-
-                // Mettre à jour le compteur de créatures
-                if (onCreatureCountChange && simulation) {
-                    onCreatureCountChange(simulation.creatures.length);
-                }
             };
 
             p.windowResized = () => {
@@ -75,7 +85,7 @@ const EcosystemSimulation = ({ isRunning, initialCreatureCount, onCreatureCountC
                 p5InstanceRef.current = null;
             }
         };
-    }, [initialCreatureCount, onCreatureCountChange]); // Uniquement lors du montage initial et en cas de changement d'initialCreatureCount
+    }, [creatureCount]);
 
     // Effet pour gérer les changements de isRunning sans recréer le canvas
     useEffect(() => {
