@@ -5,7 +5,7 @@ export const playlist = [
         url: '/audio/tides-arend-main-version-03-18-6653.mp3',
         credits: {
             url: 'https://uppbeat.io/t/arend/tides',
-            licenseCode: 'J7YQZ0MT4SGTRIJE',
+            licenseCode: 'W8UFJCSD4GDNAM0Y',
         },
     },
     {
@@ -14,7 +14,7 @@ export const playlist = [
         url: '/audio/soaring-dan-phillipson-main-version-03-10-10490.mp3',
         credits: {
             url: 'https://uppbeat.io/t/dan-phillipson/soaring',
-            licenseCode: 'J7YQZ0MT4SGTRIJE',
+            licenseCode: 'XPSI4HOV6TPHZPUH',
         },
     },
     {
