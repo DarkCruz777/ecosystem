@@ -1,6 +1,6 @@
-# Guide d'installation du simulateur d'écosystème React avec UnoCSS
+# Guide d'installation du simulateur d'écosystème
 
-Ce guide vous aidera à installer et exécuter le simulateur d'écosystème développé avec React et UnoCSS.
+Ce guide vous aidera à installer et exécuter le simulateur d'écosystème.
 
 ## Prérequis
 
@@ -9,28 +9,7 @@ Ce guide vous aidera à installer et exécuter le simulateur d'écosystème dév
 
 ## Installation
 
-1. Créez un nouveau dossier pour votre projet et placez-y tous les fichiers fournis en respectant la structure suivante :
-
-```
-simulateur-ecosysteme/
-├── package.json
-├── vite.config.js
-├── uno.config.js
-├── index.html
-├── src/
-│   ├── main.jsx
-│   ├── App.jsx
-│   ├── styles/
-│   │   ├── reset.css
-│   │   └── keyframes.css
-│   ├── components/
-│   │   ├── Controls.jsx
-│   │   ├── EcosystemSimulation.jsx
-│   │   └── StatusPanel.jsx
-│   └── simulation/
-│       ├── creature.js
-│       └── simulation.js
-```
+1. Clonez le repository :
 
 2. Installez les dépendances :
 
